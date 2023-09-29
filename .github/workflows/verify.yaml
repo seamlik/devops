@@ -1,0 +1,29 @@
+name: verify
+on:
+  - push
+  - pull_request
+jobs:
+  main:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        name: Cache Rust
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - uses: actions/cache@v3
+        name: Cache NPM
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node
+      - run: npm install --global prettier
+      - run: prettier --write **/*.yaml
+      - run: cargo fmt
+      - run: git --no-pager diff --exit-code
+      - run: cargo test
