@@ -1,16 +1,22 @@
 mod task;
+mod util;
 
 use clap::Parser;
 use clap::Subcommand;
 use task::format::FormatTask;
 use task::rust_code_coverage::RustCodeCoverageTask;
+use task::Task;
 
 fn main() -> anyhow::Result<()> {
     env_logger::init();
-    match Cli::parse().command {
-        Command::Format => FormatTask::default().run()?,
-        Command::RustCodeCoverage => RustCodeCoverageTask::default().run()?,
+    let task: Box<dyn Task> = match Cli::parse().command {
+        Command::Format => Box::<FormatTask>::default(),
+        Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
+    };
+    for command in task.required_commands().into_iter() {
+        crate::util::check_command_exists(command)?;
     }
+    task.run()?;
     Ok(())
 }
 

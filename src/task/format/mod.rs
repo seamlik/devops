@@ -1,5 +1,6 @@
 use self::cargo::CargoFormatter;
 use self::prettier::PrettierFormatter;
+use super::Task;
 
 mod cargo;
 mod prettier;
@@ -8,8 +9,12 @@ pub struct FormatTask {
     formatters: Vec<Box<dyn Formatter>>,
 }
 
-impl FormatTask {
-    pub fn run(&self) -> anyhow::Result<()> {
+impl Task for FormatTask {
+    fn required_commands(&self) -> Vec<&'static str> {
+        vec!["cargo", "prettier"]
+    }
+
+    fn run(&self) -> anyhow::Result<()> {
         for formatter in self.formatters.iter() {
             if formatter.usage_detected()? {
                 formatter.run()?;

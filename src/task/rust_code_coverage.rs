@@ -1,3 +1,4 @@
+use super::Task;
 use std::path::PathBuf;
 use std::process::Command;
 
@@ -7,8 +8,12 @@ pub struct RustCodeCoverageTask {
     profraw_directory_path: PathBuf,
 }
 
-impl RustCodeCoverageTask {
-    pub fn run(&self) -> anyhow::Result<()> {
+impl Task for RustCodeCoverageTask {
+    fn required_commands(&self) -> Vec<&'static str> {
+        vec!["cargo", "grcov"]
+    }
+
+    fn run(&self) -> anyhow::Result<()> {
         log::debug!("Removing the existing Cargo target directory for code coverage");
         std::fs::remove_dir_all(&self.target_directory_path)?;
 
@@ -35,7 +40,9 @@ impl RustCodeCoverageTask {
 
         Ok(())
     }
+}
 
+impl RustCodeCoverageTask {
     fn run_cargo_test(&self) -> anyhow::Result<()> {
         let profraw = format!(
             "{}/default-%p-%m.profraw",
