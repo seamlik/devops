@@ -6,6 +6,7 @@ pub struct CargoFormatter;
 
 impl Formatter for CargoFormatter {
     fn run(&self) -> anyhow::Result<()> {
+        log::debug!("Formatting using Rustfmt");
         let successful = Command::new("cargo").arg("fmt").spawn()?.wait()?.success();
         if !successful {
             anyhow::bail!("Failed to format Rust code");
