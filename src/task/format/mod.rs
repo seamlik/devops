@@ -27,14 +27,18 @@ impl Task for FormatTask {
 }
 
 impl FormatTask {
-    pub fn new(formattings: &[String]) -> Self {
+    pub fn new(formattings: &[String]) -> anyhow::Result<Self> {
+        if formattings.is_empty() {
+            anyhow::bail!("Must specify at least 1 formatting");
+        }
+
         let mut formatters: Vec<Box<dyn Formatter>> =
             vec![Box::new(FileBasedFormatter::new(formattings))];
         let formatting_set: HashSet<_> = formattings.iter().cloned().collect();
         if formatting_set.contains("rust") {
             formatters.push(Box::<CargoFormatter>::default());
         }
-        Self { formatters }
+        Ok(Self { formatters })
     }
 }
 

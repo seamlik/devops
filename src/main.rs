@@ -10,7 +10,7 @@ use task::Task;
 fn main() -> anyhow::Result<()> {
     env_logger::init();
     let task: Box<dyn Task> = match Cli::parse().command {
-        Command::Format { formattings } => Box::new(FormatTask::new(&formattings)),
+        Command::Format { formattings } => Box::new(FormatTask::new(&formattings)?),
         Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
     };
     for command in task.get_required_commands().into_iter() {
