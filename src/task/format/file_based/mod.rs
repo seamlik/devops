@@ -5,6 +5,9 @@ use super::Formatter;
 use anyhow::bail;
 use std::cell::Cell;
 use std::collections::HashSet;
+use std::ffi::OsString;
+use std::path::Path;
+use std::path::PathBuf;
 use std::process::Command;
 use walkdir::DirEntry;
 use walkdir::WalkDir;
@@ -13,6 +16,7 @@ use walkdir::WalkDir;
 pub struct FileBasedFormatter {
     git_failed: Cell<bool>,
     impl_list: Vec<Box<dyn FormatterImpl>>,
+    ignored_files: HashSet<PathBuf>,
 }
 
 impl FileBasedFormatter {
@@ -38,25 +42,17 @@ impl FileBasedFormatter {
         Self {
             git_failed: Cell::new(false),
             impl_list,
+            ignored_files: HashSet::from([PathBuf::from_iter([".", ".git"])]),
         }
     }
-    fn extract_path<'a>(&self, entry: &'a DirEntry) -> anyhow::Result<&'a str> {
-        if let Some(path) = entry.path().to_str() {
-            if !self.detect_ignorance(path) && entry.file_type().is_file() {
-                Ok(path)
-            } else {
-                Ok("")
-            }
-        } else {
-            bail!("File path contains invalid Unicode")
+    fn detect_ignorance(&self, dir_entry: &DirEntry) -> bool {
+        if self.ignored_files.contains(dir_entry.path()) {
+            return true;
         }
-    }
-
-    fn detect_ignorance(&self, path: &str) -> bool {
         if self.git_failed.get() {
             return false;
         }
-        match self.detect_git_ignorance(path) {
+        match self.detect_git_ignorance(dir_entry.path()) {
             Ok(ignored) => ignored,
             Err(e) => {
                 log::info!("{}", e);
@@ -67,7 +63,7 @@ impl FileBasedFormatter {
         }
     }
 
-    fn detect_git_ignorance(&self, path: &str) -> anyhow::Result<bool> {
+    fn detect_git_ignorance(&self, path: &Path) -> anyhow::Result<bool> {
         let output = Command::new("git").arg("check-ignore").arg(path).output()?;
         if let Some(exit_code) = output.status.code() {
             match exit_code {
@@ -83,12 +79,13 @@ impl FileBasedFormatter {
         }
     }
 
-    fn format(&self, path: &str) -> anyhow::Result<()> {
-        let formatter = self
+    fn format(&self, path: &Path) -> anyhow::Result<()> {
+        if let Some(formatter) = self
             .impl_list
             .iter()
-            .find(|fmt| path.ends_with(fmt.get_file_name_suffix()));
-        if let Some(formatter) = formatter {
+            .find(|fmt| path.to_string_lossy().ends_with(fmt.get_file_name_suffix()))
+        {
+            log::debug!("Formatting using {}", formatter.get_name());
             let successful = Command::new(formatter.get_command())
                 .args(formatter.build_arguments(path))
                 .spawn()?
@@ -106,12 +103,17 @@ impl FileBasedFormatter {
 
 impl Formatter for FileBasedFormatter {
     fn run(&self) -> anyhow::Result<()> {
-        for entry in WalkDir::new(".").follow_links(true) {
+        for entry in WalkDir::new(".")
+            .follow_links(true)
+            .into_iter()
+            .filter_entry(|entry| !self.detect_ignorance(entry))
+        {
             match entry {
                 Ok(entry) => {
                     log::debug!("Scanning {}", entry.path().display());
-                    let path = self.extract_path(&entry)?;
-                    self.format(path)?;
+                    if entry.file_type().is_file() {
+                        self.format(entry.path())?;
+                    }
                 }
                 Err(e) => log::debug!("Failed while scanning: {}", e),
             }
@@ -129,8 +131,9 @@ impl Formatter for FileBasedFormatter {
 }
 
 trait FormatterImpl {
+    fn get_name(&self) -> &'static str;
     fn get_file_name_suffix(&self) -> &'static str;
     fn get_command(&self) -> &'static str;
     fn get_required_commands(&self) -> Vec<&'static str>;
-    fn build_arguments(&self, path: &str) -> Vec<String>;
+    fn build_arguments(&self, path: &Path) -> Vec<OsString>;
 }
