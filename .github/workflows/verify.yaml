@@ -15,6 +15,7 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
+            target-install
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
           restore-keys: ${{ runner.os }}-cargo-
       - uses: actions/cache@v3
@@ -23,8 +24,10 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node
       - run: npm install --global prettier
-      - run: prettier --write **/*.yaml
-      - run: cargo fmt
+      - run: cargo install --git https://github.com/seamlik/devops.git --force
+        env:
+          CARGO_TARGET_DIR: target-install
+      - run: devops format rust yaml
       - name: Check against unformatted files
         run: git --no-pager diff --exit-code
       - run: cargo test
