@@ -4,6 +4,7 @@ mod file_based;
 use self::cargo::CargoFormatter;
 use self::file_based::FileBasedFormatter;
 use super::Task;
+use std::collections::HashSet;
 
 pub struct FormatTask {
     formatters: Vec<Box<dyn Formatter>>,
@@ -11,14 +12,15 @@ pub struct FormatTask {
 
 impl Task for FormatTask {
     fn get_required_commands(&self) -> Vec<&'static str> {
-        vec!["cargo", "prettier"]
+        self.formatters
+            .iter()
+            .flat_map(|fmt| fmt.get_required_commands())
+            .collect()
     }
 
     fn run(&self) -> anyhow::Result<()> {
         for formatter in self.formatters.iter() {
-            if formatter.detect_usage()? {
-                formatter.run()?;
-            }
+            formatter.run()?;
         }
         Ok(())
     }
@@ -26,17 +28,17 @@ impl Task for FormatTask {
 
 impl FormatTask {
     pub fn new(formattings: &[String]) -> Self {
-        Self {
-            formatters: vec![
-                Box::<CargoFormatter>::default(),
-                Box::new(FileBasedFormatter::new(formattings)),
-            ],
+        let mut formatters: Vec<Box<dyn Formatter>> =
+            vec![Box::new(FileBasedFormatter::new(formattings))];
+        let formatting_set: HashSet<_> = formattings.iter().cloned().collect();
+        if formatting_set.contains("rust") {
+            formatters.push(Box::<CargoFormatter>::default());
         }
+        Self { formatters }
     }
 }
 
 trait Formatter {
-    fn detect_usage(&self) -> std::io::Result<bool>;
     fn run(&self) -> anyhow::Result<()>;
     fn get_required_commands(&self) -> Vec<&'static str>;
 }

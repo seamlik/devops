@@ -105,10 +105,6 @@ impl FileBasedFormatter {
 }
 
 impl Formatter for FileBasedFormatter {
-    fn detect_usage(&self) -> std::io::Result<bool> {
-        Ok(false)
-    }
-
     fn run(&self) -> anyhow::Result<()> {
         for entry in WalkDir::new(".").follow_links(true) {
             match entry {
