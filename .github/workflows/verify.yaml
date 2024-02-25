@@ -16,13 +16,14 @@ jobs:
             ~/.cargo/registry/cache
             ~/.cargo/git/db
             target-install
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '.github/workflows/*.yaml') }}
           restore-keys: ${{ runner.os }}-cargo-
       - uses: actions/cache@v3
         name: Cache NPM
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node
+          key: ${{ runner.os }}-node-${{ hashFiles('.github/workflows/*.yaml') }}
+          restore-keys: ${{ runner.os }}-node-
       - run: npm install --global prettier
       - run: cargo install --git https://github.com/seamlik/devops.git --force
         env:
