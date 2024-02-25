@@ -9,7 +9,7 @@ pub struct RustCodeCoverageTask {
 }
 
 impl Task for RustCodeCoverageTask {
-    fn required_commands(&self) -> Vec<&'static str> {
+    fn get_required_commands(&self) -> Vec<&'static str> {
         vec!["cargo", "grcov"]
     }
 

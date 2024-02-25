@@ -17,21 +17,20 @@ In those cases, we simply detect if a build script or project definition file ex
 
 Here are all the file formats we support:
 
-| Formatting | Formatter                                       | Auto-detected? |
-| ---------- | ----------------------------------------------- | -------------- |
-| css        | [Prettier](https://prettier.io)                 | ❌            |
-| html       | [Prettier](https://prettier.io)                 | ❌            |
-| json       | [Prettier](https://prettier.io)                 | ❌            |
-| markdown   | [Prettier](https://prettier.io)                 | ❌            |
-| rust       | [rustfmt](https://github.com/rust-lang/rustfmt) | ✔️            |
-| spotless   | [Spotless](https://github.com/diffplug/spotles) | ✔️            |
-| xml        | [LemMinX](https://github.com/eclipse/lemminx)   | ❌            |
-| yaml       | [Prettier](https://prettier.io)                 | ❌            |
+| Formatting      | Formatter                                       | Auto-detected? |
+| --------------- | ----------------------------------------------- | -------------- |
+| css             | [Prettier](https://prettier.io)                 | ❌            |
+| html            | [Prettier](https://prettier.io)                 | ❌            |
+| json            | [Prettier](https://prettier.io)                 | ❌            |
+| markdown        | [Prettier](https://prettier.io)                 | ❌            |
+| rust (TODO)     | [rustfmt](https://github.com/rust-lang/rustfmt) | ✔️            |
+| spotless (TODO) | [Spotless](https://github.com/diffplug/spotles) | ✔️            |
+| xml (TODO)      | [LemMinX](https://github.com/eclipse/lemminx)   | ❌            |
+| yaml            | [Prettier](https://prettier.io)                 | ❌            |
 
 These files, when existing, will be considered when deciding if a file will be ignored:
 
 * .gitignore
-* .prettierignore
 
 #### Usage
 

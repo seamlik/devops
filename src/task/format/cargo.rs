@@ -6,7 +6,7 @@ use std::process::Command;
 pub struct CargoFormatter;
 
 impl Formatter for CargoFormatter {
-    fn usage_detected(&self) -> std::io::Result<bool> {
+    fn detect_usage(&self) -> std::io::Result<bool> {
         PathBuf::from("./Cargo.toml").try_exists()
     }
 
@@ -17,5 +17,9 @@ impl Formatter for CargoFormatter {
         }
 
         Ok(())
+    }
+
+    fn get_required_commands(&self) -> Vec<&'static str> {
+        vec!["cargo"]
     }
 }

@@ -10,10 +10,10 @@ use task::Task;
 fn main() -> anyhow::Result<()> {
     env_logger::init();
     let task: Box<dyn Task> = match Cli::parse().command {
-        Command::Format => Box::<FormatTask>::default(),
+        Command::Format { formattings } => Box::new(FormatTask::new(&formattings)),
         Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
     };
-    for command in task.required_commands().into_iter() {
+    for command in task.get_required_commands().into_iter() {
         crate::util::check_command_exists(command)?;
     }
     task.run()?;
@@ -30,7 +30,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Command {
     /// Formats all code.
-    Format,
+    Format { formattings: Vec<String> },
 
     /// Compiles a code coverage report for Rust code.
     RustCodeCoverage,
