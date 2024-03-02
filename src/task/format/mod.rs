@@ -1,6 +1,8 @@
+mod buf;
 mod cargo;
 mod file_based;
 
+use self::buf::BufFormatter;
 use self::cargo::CargoFormatter;
 use self::file_based::FileBasedFormatter;
 use super::Task;
@@ -37,6 +39,9 @@ impl FormatTask {
         let formatting_set: HashSet<_> = formattings.iter().cloned().collect();
         if formatting_set.contains("rust") {
             formatters.push(Box::<CargoFormatter>::default());
+        }
+        if formatting_set.contains("protobuf") {
+            formatters.push(Box::<BufFormatter>::default());
         }
         Ok(Self { formatters })
     }

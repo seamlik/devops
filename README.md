@@ -21,6 +21,7 @@ Here are all the file formats we support:
 | html            | [Prettier](https://prettier.io)                 |
 | json            | [Prettier](https://prettier.io)                 |
 | markdown        | [Prettier](https://prettier.io)                 |
+| protobuf        | [Buf](https://buf.build/docs/format/style)      |
 | rust            | [rustfmt](https://github.com/rust-lang/rustfmt) |
 | spotless (TODO) | [Spotless](https://github.com/diffplug/spotles) |
 | xml (TODO)      | [LemMinX](https://github.com/eclipse/lemminx)   |
