@@ -5,9 +5,14 @@ runs:
   steps:
     - uses: actions/cache@v4
       with:
-        path: ./target-install
-        key: ${{ runner.os }}-devops-${{ hashFiles('.github/**/*.yaml') }}
-        restore-keys: ${{ runner.os }}-devops-
+        path: |
+          ~/.cargo/bin
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
+          ./target-install
+        key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
+        restore-keys: ${{ runner.os }}-rust-
     - run: cargo install --git https://github.com/seamlik/devops.git --force
       shell: pwsh
       env:
