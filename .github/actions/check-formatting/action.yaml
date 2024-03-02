@@ -1,0 +1,7 @@
+name: Check Formatting
+description: Check against unformatted files
+runs:
+  using: composite
+  steps:
+    - run: git --no-pager diff --exit-code
+      shell: pwsh

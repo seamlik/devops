@@ -60,3 +60,7 @@ Until one day I overheard that some team in a certain huge company started to wr
 As a result, their Jenkins and TeamCity scripts were greatly simplified.
 Migrating to other CI servers would also cost less.
 So, why don't I follow this path?
+
+## GitHub Actions
+
+Directory `.github/actions` contains various custom GitHub Actions steps shared by my projects.

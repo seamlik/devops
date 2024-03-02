@@ -1,0 +1,14 @@
+name: Install DevOps
+description: Install DevOps
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ./target-install
+        key: ${{ runner.os }}-devops-${{ hashFiles('.github/**/*.yaml') }}
+        restore-keys: ${{ runner.os }}-devops-
+    - run: cargo install --git https://github.com/seamlik/devops.git --force
+      shell: pwsh
+      env:
+        CARGO_TARGET_DIR: ./target-install

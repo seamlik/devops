@@ -1,4 +1,3 @@
-name: verify
 on:
   - push
   - pull_request
@@ -7,28 +6,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        name: Cache Rust
-        with:
-          path: |
-            ~/.cargo/bin
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-            target-install
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml', '.github/workflows/*.yaml') }}
-          restore-keys: ${{ runner.os }}-cargo-
-      - uses: actions/cache@v4
-        name: Cache NPM
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('.github/workflows/*.yaml') }}
-          restore-keys: ${{ runner.os }}-node-
+      - uses: ./.github/actions/cache-rust
+      - uses: ./.github/actions/cache-nodejs
       - run: npm install --global prettier
-      - run: cargo install --git https://github.com/seamlik/devops.git --force
-        env:
-          CARGO_TARGET_DIR: target-install
-      - run: devops format rust yaml
-      - name: Check against unformatted files
-        run: git --no-pager diff --exit-code
       - run: cargo test
+      - run: cargo run -- format rust yaml markdown
+      - uses: ./.github/actions/check-formatting

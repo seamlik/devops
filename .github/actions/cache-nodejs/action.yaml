@@ -1,0 +1,12 @@
+name: Cache Node.js
+description: Cache Node.js
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.npm
+          ~/AppData/npm-cache
+        key: ${{ runner.os }}-nodejs-${{ hashFiles('.github/**/*.yaml') }}
+        restore-keys: ${{ runner.os }}-nodejs-
