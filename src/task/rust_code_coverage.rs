@@ -15,20 +15,20 @@ impl Task for RustCodeCoverageTask {
 
     fn run(&self) -> anyhow::Result<()> {
         if self.target_directory_path.try_exists()? {
-            log::debug!("Removing the existing Cargo target directory for code coverage");
+            println!("Removing the existing Cargo target directory for code coverage");
             std::fs::remove_dir_all(&self.target_directory_path)?;
         }
 
-        log::debug!("Creating the code coverage report directory");
+        println!("Creating the code coverage report directory");
         std::fs::create_dir_all(&self.report_directory_path)?;
 
-        log::debug!("Creating the profraw directory");
+        println!("Creating the profraw directory");
         std::fs::create_dir_all(&self.profraw_directory_path)?;
 
-        log::debug!("Building and running tests");
+        println!("Building and running tests");
         self.run_cargo_test()?;
 
-        log::debug!("Compiling code coverage report");
+        println!("Compiling code coverage report");
         self.run_grcov()?;
 
         let report_path = PathBuf::from(format!(
