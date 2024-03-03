@@ -100,7 +100,7 @@ impl Default for RustCodeCoverageTask {
         let target_directory_name = "target-coverage";
         let target_directory_path = PathBuf::from(format!("./{}", target_directory_name));
         let report_directory_path =
-            PathBuf::from(format!("{}/coverage", target_directory_path.display()));
+            PathBuf::from(format!("{}/report", target_directory_path.display()));
         let profraw_directory_path =
             PathBuf::from(format!("{}/profraw", target_directory_path.display()));
         Self {
