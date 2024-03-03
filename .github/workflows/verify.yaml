@@ -5,10 +5,13 @@ jobs:
   main:
     runs-on: ubuntu-22.04
     steps:
+      # Setup
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/cache-rust
+      - uses: ./.github/actions/install-devops
       - uses: ./.github/actions/cache-nodejs
       - run: npm install --global prettier
+
+      # Verify
       - run: cargo test
-      - run: cargo run -- format rust yaml markdown
+      - run: devops format rust yaml markdown
       - uses: ./.github/actions/check-formatting
