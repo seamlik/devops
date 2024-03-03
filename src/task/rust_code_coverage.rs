@@ -78,7 +78,7 @@ impl RustCodeCoverageTask {
             .arg("--binary-path")
             .arg(binary_path)
             .arg("--output-type")
-            .arg("html")
+            .arg("html,cobertura")
             .arg("--source-dir")
             .arg(".")
             .arg("--output-path")
