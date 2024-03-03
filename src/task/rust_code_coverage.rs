@@ -14,8 +14,10 @@ impl Task for RustCodeCoverageTask {
     }
 
     fn run(&self) -> anyhow::Result<()> {
-        log::debug!("Removing the existing Cargo target directory for code coverage");
-        std::fs::remove_dir_all(&self.target_directory_path)?;
+        if self.target_directory_path.try_exists()? {
+            log::debug!("Removing the existing Cargo target directory for code coverage");
+            std::fs::remove_dir_all(&self.target_directory_path)?;
+        }
 
         log::debug!("Creating the code coverage report directory");
         std::fs::create_dir_all(&self.report_directory_path)?;
