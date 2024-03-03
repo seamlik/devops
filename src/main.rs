@@ -1,6 +1,8 @@
 mod task;
 mod util;
 
+use std::collections::BTreeSet;
+
 use clap::Parser;
 use clap::Subcommand;
 use task::format::FormatTask;
@@ -14,13 +16,11 @@ fn main() -> anyhow::Result<()> {
         Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
     };
 
-    println!(
-        "Checking if these commands exist: {:?}",
-        task.get_required_commands()
-    );
-    for command in task.get_required_commands().into_iter() {
-        crate::util::check_command_exists(command)?;
-    }
+    let required_commnads: BTreeSet<_> = task.get_required_commands().into_iter().collect();
+    println!("Checking if these commands exist: {:?}", required_commnads);
+    required_commnads
+        .into_iter()
+        .try_for_each(crate::util::check_command_exists)?;
 
     println!("Required commands exist, now starting the task.");
     task.run()?;
