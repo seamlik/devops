@@ -13,7 +13,9 @@ runs:
           ./target-install
         key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
         restore-keys: ${{ runner.os }}-rust-
-    - run: cargo install --git https://github.com/seamlik/devops.git --force
+    - run: |
+        cargo install --git https://github.com/seamlik/devops.git --force
+        cargo install grcov --force
       shell: pwsh
       env:
         CARGO_TARGET_DIR: ./target-install
