@@ -13,9 +13,16 @@ fn main() -> anyhow::Result<()> {
         Command::Format { formattings } => Box::new(FormatTask::new(&formattings)?),
         Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
     };
+
+    println!(
+        "Checking if these commands exist: {:?}",
+        task.get_required_commands()
+    );
     for command in task.get_required_commands().into_iter() {
         crate::util::check_command_exists(command)?;
     }
+
+    println!("Required commands exist, now starting the task.");
     task.run()?;
     Ok(())
 }
