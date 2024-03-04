@@ -14,6 +14,7 @@ runs:
         key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
         restore-keys: ${{ runner.os }}-rust-
     - run: |
+        rustup component add llvm-tools-preview
         cargo install --git https://github.com/seamlik/devops.git --force
         cargo install grcov --force
       shell: pwsh

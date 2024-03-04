@@ -1,0 +1,10 @@
+name: Upload CodeCov
+description: Upload code coverage report to CodeCov
+runs:
+  using: composite
+  steps:
+    - run: |
+        devops rust-code-coverage
+        Remove-Item -Recurse ./target-coverage/report/html
+      shell: pwsh
+    - uses: codecov/codecov-action@v4
