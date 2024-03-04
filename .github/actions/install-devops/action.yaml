@@ -10,6 +10,7 @@ runs:
           ~/.cargo/registry/index
           ~/.cargo/registry/cache
           ~/.cargo/git/db
+          ~/.rustup
           ./target-install
         key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
         restore-keys: ${{ runner.os }}-rust-
