@@ -18,6 +18,6 @@ runs:
         rustup component add llvm-tools-preview
         cargo install --git https://github.com/seamlik/devops.git --force
         cargo install grcov --force
-      shell: pwsh
+      shell: bash
       env:
         CARGO_TARGET_DIR: ./target-install

@@ -4,4 +4,4 @@ runs:
   using: composite
   steps:
     - run: git --no-pager diff --exit-code
-      shell: pwsh
+      shell: bash

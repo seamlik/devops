@@ -5,6 +5,6 @@ runs:
   steps:
     - run: |
         devops rust-code-coverage
-        Remove-Item -Recurse ./target-coverage/report/html
-      shell: pwsh
+        rm --force --recursive ./target-coverage/report/html
+      shell: bash
     - uses: codecov/codecov-action@v4
