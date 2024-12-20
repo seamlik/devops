@@ -5,14 +5,12 @@ use std::collections::BTreeSet;
 
 use clap::Parser;
 use clap::Subcommand;
-use task::format::FormatTask;
 use task::rust_code_coverage::RustCodeCoverageTask;
 use task::Task;
 
 fn main() -> anyhow::Result<()> {
     env_logger::init();
     let task: Box<dyn Task> = match Cli::parse().command {
-        Command::Format { formattings } => Box::new(FormatTask::new(&formattings)?),
         Command::RustCodeCoverage => Box::<RustCodeCoverageTask>::default(),
     };
 
@@ -36,9 +34,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    /// Formats all code.
-    Format { formattings: Vec<String> },
-
     /// Compiles a code coverage report for Rust code.
     RustCodeCoverage,
 }

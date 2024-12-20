@@ -8,35 +8,6 @@ This program must only run in the root directory of a project.
 
 All tasks are designed as subcommands.
 
-### format
-
-Formats all files in known formats.
-Because there are countless file formats in the world, one must specify what kind of files to format.
-
-Here are all the file formats we support:
-
-| Formatting      | Formatter                                       |
-| --------------- | ----------------------------------------------- |
-| css             | [Prettier](https://prettier.io)                 |
-| html            | [Prettier](https://prettier.io)                 |
-| json            | [Prettier](https://prettier.io)                 |
-| markdown        | [Prettier](https://prettier.io)                 |
-| protobuf        | [Buf](https://buf.build/docs/format/style)      |
-| rust            | [rustfmt](https://github.com/rust-lang/rustfmt) |
-| spotless (TODO) | [Spotless](https://github.com/diffplug/spotles) |
-| xml (TODO)      | [LemMinX](https://github.com/eclipse/lemminx)   |
-| yaml            | [Prettier](https://prettier.io)                 |
-
-These files, when existing, will be considered when deciding if a file will be ignored:
-
-- .gitignore
-
-#### Usage
-
-```powershell
-devops format xml yaml ...
-```
-
 ### rust-code-coverage
 
 Generates a code coverage report using [grcov](https://github.com/mozilla/grcov).

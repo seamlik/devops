@@ -12,6 +12,7 @@ jobs:
       - run: npm install --global prettier
 
       # Verify
-      - run: cargo test
-      - run: devops format rust yaml markdown
+      - run: prettier --write **/*.yaml **/*.md
+      - run: cargo fmt
       - uses: ./.github/actions/check-formatting
+      - run: cargo test
