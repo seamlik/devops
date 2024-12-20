@@ -1,5 +1,5 @@
-name: Install DevOps
-description: Install DevOps
+name: Cache Rust
+description: Cache Rust
 runs:
   using: composite
   steps:
@@ -11,13 +11,5 @@ runs:
           ~/.cargo/registry/cache
           ~/.cargo/git/db
           ~/.rustup
-          ./target-install
         key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
         restore-keys: ${{ runner.os }}-rust-
-    - run: |
-        rustup component add llvm-tools-preview
-        cargo install --git https://github.com/seamlik/devops.git --force
-        cargo install grcov --force
-      shell: bash
-      env:
-        CARGO_TARGET_DIR: ./target-install

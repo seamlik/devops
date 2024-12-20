@@ -7,8 +7,8 @@ jobs:
     steps:
       # Setup
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/install-devops
       - uses: ./.github/actions/cache-nodejs
+      - uses: ./.github/actions/cache-rust
       - run: npm install --global prettier
 
       # Verify
