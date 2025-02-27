@@ -8,5 +8,5 @@ runs:
         path: |
           ~/.npm
           ~/AppData/npm-cache
-        key: ${{ runner.os }}-nodejs-${{ hashFiles('.github/**/*.yaml') }}
+        key: ${{ runner.os }}-nodejs-${{ hashFiles('**/package-lock.json') }}
         restore-keys: ${{ runner.os }}-nodejs-

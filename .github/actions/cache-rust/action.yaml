@@ -11,5 +11,5 @@ runs:
           ~/.cargo/registry/cache
           ~/.cargo/git/db
           ~/.rustup
-        key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml', '.github/**/*.yaml') }}
+        key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.toml') }}
         restore-keys: ${{ runner.os }}-rust-
